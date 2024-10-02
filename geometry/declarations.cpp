@@ -1,10 +1,9 @@
 typedef long double ld;
 const ld eps = 1e-10;
 #define sign(x) (((x) > eps) - ((x) < -eps))
-#define is_zero(x) (!sign(x))
 #define sq(p) ((p)*(p))
 #define len(p) (sqrt(sq(p)))
-#define r90(p) Pt(-p.y, p.x)
+#define r90(p) Pt(-(p).y, (p).x)
 
 struct Pt {
   ld x, y;
@@ -22,9 +21,9 @@ struct Pt {
   ld operator ^ (const Pt &a) const {
     return x * a.y - y * a.x;  }
   bool operator < (const Pt &a) const {
-    return x < a.x || is_zero(x - a.x) && y < a.y; }
+    return sign(x - a.x) < 0 || sign(x - a.x) == 0 && sign(y - a.y) < 0; }
   bool operator == (const Pt &a) const {
-    return is_zero(x - a.x) && is_zero(y - a.y); }
+    return sign(x - a.x) == 0 && sign(y - a.y) == 0; }
 };
 
 struct Line {
@@ -39,4 +38,23 @@ struct Line {
 struct Circle {
   Pt o; ld r;
   Circle(Pt o = Pt(), ld r = 0) : o(o), r(r) {}
+  Circle(const Pt &p1, const Pt &p2)
+    : o((p1 + p2) / 2), r(sq(p1 - p2) / 4.0) {}
+  Circle(const Pt &p1, const Pt &p2, const Pt &p3) {
+    Pt va = r90(p1 - p2), vb = r90(p1 - p3);
+    if (sign(va ^ vb) == 0) {
+      *this = Circle(p1, p2);
+      Circle t(p1, p3);
+      if (r < t.r) *this = t;
+      t = Circle(p2, p3);
+      if (r < t.r) *this = t; }
+    else {
+      Pt p12 = (p1 + p2) / 2, p13 = (p1 + p3) / 2;
+      ld t = ((p13 - p12) * (p1 - p3)) / (va ^ vb);
+      o = p12 + va*t;
+      r = sq(o - p1);
+    }
+  }
+  bool contain(const Pt &a) {
+    return sign(len(a - o) - r) <= 0; }
 };
