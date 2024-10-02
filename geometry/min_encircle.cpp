@@ -1,3 +1,4 @@
+// remember to shuffle!!!
 Circle encircle(const vector<Pt> &pts) {
   Circle ans(Pt(), 0);
   for (int i = 0; i < pts.size(); ++i) {

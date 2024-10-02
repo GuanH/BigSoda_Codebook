@@ -36,25 +36,25 @@ struct Line {
 } };
 
 struct Circle {
-  Pt o; ld r;
-  Circle(Pt o = Pt(), ld r = 0) : o(o), r(r) {}
+  Pt o; ld r2;
+  Circle(Pt o = Pt(), ld r = 0) : o(o), r2(sq(r)) {}
   Circle(const Pt &p1, const Pt &p2)
-    : o((p1 + p2) / 2), r(sq(p1 - p2) / 4.0) {}
+    : o((p1 + p2) / 2), r2(sq(p1 - p2) / 4.0) {}
   Circle(const Pt &p1, const Pt &p2, const Pt &p3) {
     Pt va = r90(p1 - p2), vb = r90(p1 - p3);
     if (sign(va ^ vb) == 0) {
       *this = Circle(p1, p2);
       Circle t(p1, p3);
-      if (r < t.r) *this = t;
+      if (r2 < t.r2) *this = t;
       t = Circle(p2, p3);
-      if (r < t.r) *this = t; }
+      if (r2 < t.r2) *this = t; }
     else {
       Pt p12 = (p1 + p2) / 2, p13 = (p1 + p3) / 2;
       ld t = ((p13 - p12) * (p1 - p3)) / (va ^ vb);
       o = p12 + va*t;
-      r = sq(o - p1);
+      r2 = sq(o - p1);
     }
   }
   bool contain(const Pt &a) {
-    return sign(len(a - o) - r) <= 0; }
+    return sign(sq(a - o) - r2) <= 0; }
 };
