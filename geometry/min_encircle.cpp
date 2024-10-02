@@ -14,8 +14,8 @@ Pt get_o(const Pt &a, const Pt &b, const Pt &c) {
   return intersect(pab, pbc);
 }
 
+//remember to shuffle before use!!!
 pair<ld, Pt> encircle(const vector<Pt> &p) {
-  random_shuffle(p.begin(), p.end());
   int n = p.size();
   ld r = 0;
   Pt o = p[0];
