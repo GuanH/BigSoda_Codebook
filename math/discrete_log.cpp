@@ -1,13 +1,3 @@
-int fpow(int x, int p, int m) {
-    int r = 1 % m;
-    x %= m;
-    while (p) {
-        if (p & 1) r = r * x % m;
-        x = x * x % m;
-        p >>= 1;
-    }
-    return r;
-}
 int BSGS(int start, int x, int y, int m) {
     unordered_map<int, int> mp;
     int big = 1, STEP = sqrt(m);

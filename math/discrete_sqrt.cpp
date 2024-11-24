@@ -1,25 +1,24 @@
-void calcH(LL &t, LL &h, const LL p) {
-	LL tmp=p-1; for(t=0;(tmp&1)==0;tmp/=2) t++; h=tmp;
-}
-// solve equation x^2 mod p = a
-bool solve(LL a, LL p, LL &x, LL &y) {
-	if(p == 2) { x = y = 1; return true; }
-	int p2 = p / 2, tmp = mypow(a, p2, p);
-	if (tmp == p - 1) return false;
-	if ((p + 1) % 4 == 0) {
-		x=mypow(a,(p+1)/4,p); y=p-x; return true;
-	} else {
-		LL t, h, b, pb; calcH(t, h, p);
-		if (t >= 2) {
-			do {b = rand() % (p - 2) + 2;
-			} while (mypow(b, p / 2, p) != p - 1);
-			pb = mypow(b, h, p);
-		} int s = mypow(a, h / 2, p);
-		for (int step = 2; step <= t; step++) {
-			int ss = (((LL)(s * s) % p) * a) % p;
-			for(int i=0;i<t-step;i++) ss=mul(ss,ss,p);
-			if (ss + 1 == p) s = (s * pb) % p;
-      pb = ((LL)pb * pb) % p;
-		} x = ((LL)s * a) % p; y = p - x;
-	} return true; 
+int discrete_sqrt(int y, int p) { // find x s.t. x^2 = y (mod p)
+    if (!y) return 0;
+    if (p == 2) return (y & 1) == 1 ? 1 : -1;
+    if (fpow(y, p - 1 >> 1, p) != 1) return -1;
+    int Q = p - 1, S = 0;
+    while (~Q & 1) { Q >>= 1; S++; }
+    if (S == 1) return fpow(y, p + 1 >> 2, p);
+    int z;
+    while (1) {
+        z = 1 + rand() % (p - 1);
+        if (fpow(z, p - 1 >> 1, p) != 1) break;
+    }
+    int c = fpow(z, Q, p), R = fpow(y, Q + 1 >> 1, p);
+    int t = fpow(y, Q, p), M = S, b, i;
+    while (1) {
+        if (t % p == 1) break;
+        for (i = 1; i < M && fpow(t, 1LL << i, p) != 1; i++);
+        b = fpow(c, 1LL << M - i - 1, p);
+        R = R * b % p;
+        c = fpow(b, 2, p);
+        t = t * c % p; M = i;
+    }
+    return (R % p + p) % p;
 }
