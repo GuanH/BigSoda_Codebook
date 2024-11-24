@@ -1,15 +1,10 @@
 inline int ori(const Pt &o, const Pt &a, const Pt &b) {
-  return sign((a - o) ^ (b - o));
-}
-
-
+  return sign((a - o) ^ (b - o)); }
 // 0:out, 1:ontop, 2:in
 inline int btw(const Pt &a, const Pt &b, const Pt &c) {
   if (ori(a, b, c)) return 0;
   int s = sign((c - a) * (c - b));
-  return (s < 0) + (s <= 0);
-}
-
+  return (s < 0) + (s <= 0); }
 // 0:no, 1:1pt(parallel), -1:1pt, 2:inf pt
 int banana(const Pt &p1, const Pt &p2,
            const Pt &p3, const Pt &p4) {
@@ -23,7 +18,6 @@ int banana(const Pt &p1, const Pt &p2,
   }
   return -(a123 * a124 <= 0 && a341 * a342 <= 0);
 }
-
 pair<int, Pt> S_intersect(const Pt &p1, const Pt &p2,
                         const Pt &p3, const Pt &p4) {
     int b = banana(p1, p2, p3, p4);
