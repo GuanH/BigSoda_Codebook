@@ -1,15 +1,16 @@
 // does not work when n is prime  O(n^(1/4))
-LL f(LL x, LL mod){ return add(mul(x,x,mod),1,mod); }
-LL pollard_rho(LL n) {
-	if(!(n&1)) return 2;
-  while(true){
-    LL y=2, x=rand()%(n-1)+1, res=1;
-    for(int sz=2; res==1; sz*=2) {
-      for(int i=0; i<sz && res<=1; i++) {
-        x = f(x, n);
-        res = __gcd(abs(x-y), n);
-      }
-      y = x;
-    }
-    if (res!=0 && res!=n) return res;
-} }
+int mul(__int128 a, __int128 b, int m) { return (a % m) * (b % m) % m; }
+int pollard_rho(int p) {
+  int x, y, z, c, g, i, j;
+  while (1) { 
+    y = x = rand() % p;  c = rand() % p;
+    i = 0, z = j = 1; 
+    while (++i) {
+      x = (mul(x, x, p) + c) % p;  
+      z = mul(z, abs(y - x), p); 
+      if (x == y || !z) break;
+      if (i % 127 == 0 || i == j) { 
+        g = __gcd(z, p);
+        if (g > 1) return g;
+        if (i == j) y = x, j <<= 1;
+} } } }
