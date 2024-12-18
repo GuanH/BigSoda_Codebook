@@ -1,14 +1,14 @@
-ll dfs(int u){
-    vector<ll> h;
-    subtree_sz[u] = 1;
-    for(ll child : edge[u]){
-        h.push_back(dfs(child));
-        subtree_sz[u] += subtree_sz[child];
-    }
-    sort(h.begin(), h.end());
-    ll ret = subtree_sz[u];
-    for(ll v : h){
-        ret = (ret * base + v) % MOD;
-    }
-    return ret;
-}
+const ull mask = mt19937_64(time(nullptr))();
+ull shift(ull x) {
+  x ^= mask;
+  x ^= x << 13;
+  x ^= x >> 7;
+  x ^= x << 17;
+  x ^= mask;
+  return x; }
+void dfs(int u) { // edge[父] = {子}
+  tree_hash[u] = 1;
+  for (int v : edge[u]) {
+    dfs(v);
+    tree_hash[u] += shift(tree_hash[v]);
+} }
